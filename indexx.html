@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Information</title>
+    <style>
+        .info-box {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="info-box">
+        <h2>Your Phone Details:</h2>
+        <p><strong>Device Type:</strong> <span id="deviceType"></span></p>
+        <p><strong>Operating System:</strong> <span id="os"></span></p>
+        <p><strong>Browser:</strong> <span id="browser"></span></p>
+        <p><strong>Screen Resolution:</strong> <span id="resolution"></span></p>
+        <p><strong>Language:</strong> <span id="language"></span></p>
+        <p><strong>Time Zone:</strong> <span id="timezone"></span></p>
+        <p><strong>Battery Level:</strong> <span id="battery"></span></p>
+        <p><strong>Network Type:</strong> <span id="network"></span></p>
+        <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
+    </div>
+
+    <script>
+        // Device Type
+        function getDeviceType() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            if (userAgent.includes('mobi')) return 'Mobile';
+            if (userAgent.includes('tablet')) return 'Tablet';
+            return 'Desktop';
+        }
+
+        // Operating System
+        function getOS() {
+            const platform = navigator.platform.toLowerCase();
+            if (platform.includes('win')) return 'Windows';
+            if (platform.includes('mac')) return 'MacOS';
+            if (platform.includes('linux')) return 'Linux';
+            if (/android/.test(navigator.userAgent)) return 'Android';
+            if (/iphone|ipad|ipod/.test(navigator.userAgent)) return 'iOS';
+            return 'Unknown';
+        }
+
+        // Browser
+        function getBrowser() {
+            const userAgent = navigator.userAgent;
+            if (userAgent.includes('Firefox')) return 'Mozilla Firefox';
+            if (userAgent.includes('Chrome')) return 'Google Chrome';
+            if (userAgent.includes('Safari')) return 'Safari';
+            if (userAgent.includes('MSIE') || userAgent.includes('Trident')) return 'Internet Explorer';
+            return 'Unknown';
+        }
+
+        // Set device info in HTML
+        document.getElementById('deviceType').textContent = getDeviceType();
+        document.getElementById('os').textContent = getOS();
+        document.getElementById('browser').textContent = getBrowser();
+        document.getElementById('resolution').textContent = `${screen.width}x${screen.height}`;
+
+        // Language and Time Zone
+        document.getElementById('language').textContent = navigator.language;
+        document.getElementById('timezone').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        // Battery Level (if supported)
+        if (navigator.getBattery) {
+            navigator.getBattery().then(function(battery) {
+                document.getElementById('battery').textContent = 
+                    `${(battery.level * 100).toFixed(0)}%`;
+            });
+        } else {
+            document.getElementById('battery').textContent = 'Battery info not supported';
+        }
+
+        // Network Type (if supported)
+        if (navigator.connection) {
+            document.getElementById('network').textContent = navigator.connection.effectiveType;
+        } else {
+            document.getElementById('network').textContent = 'Network info not available';
+        }
+
+        // User Agent
+        document.getElementById('userAgent').textContent = navigator.userAgent;
+    </script>
+</body>
+</html>
